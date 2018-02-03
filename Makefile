@@ -1,6 +1,10 @@
 LIB_PREFIX ?= $(shell pwd)
 
+PKG_CONFIG_PATH?=$(word 1, $(wildcard /usr/local/Cellar/qt/*/lib/pkgconfig)):
+export PKG_CONFIG_PATH
+
 all clean:
+	echo "$(PKG_CONFIG_PATH)"
 	$(MAKE) -C gen $@
 	$(MAKE) -C lib LIB_PREFIX=$(LIB_PREFIX) $@
 	$(MAKE) -C examples $@

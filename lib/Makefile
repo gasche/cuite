@@ -1,6 +1,6 @@
 OCAMLC=ocamlc.opt -g
 OCAMLOPT=ocamlopt.opt -g
-CXX=g++ -g -fPIC $(shell pkg-config --cflags --libs Qt5Gui Qt5Widgets) -I $(shell ocamlfind printconf stdlib)
+CXX=g++ -flat_namespace -std=c++14 -g -fPIC $(shell pkg-config --cflags --libs Qt5Gui Qt5Widgets) -I $(shell ocamlfind printconf stdlib)
 
 PWD=$(shell pwd)
 LIB_PREFIX ?= $(PWD)
@@ -38,7 +38,7 @@ CPP_SOURCES=$(wildcard *.gen.cpp) \
 	$(OCAMLC) -ccopt -fPIC -c $<
 
 libcuite.so: $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(CPP_SOURCES)))
-	$(CXX) -shared -o $@ -lQt5Widgets -lQt5Gui -lQt5Core -lQt5PrintSupport -lQt5Network $^
+	$(CXX) -shared -o $@ -undefined suppress $^
 
 ## ML COMPILATION
 

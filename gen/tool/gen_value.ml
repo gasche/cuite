@@ -19,7 +19,7 @@ int main(void)
   List.iter (fun {fns; fenum} ->
       List.iter (fun member ->
           let s = fns ^ "::" ^ member in
-          Printf.fprintf out "printf(\"  | \\\"%s\\\" -> 0x%%08lxL\\n\", (int64_t)%s);\n" s s
+          Printf.fprintf out "printf(\"  | \\\"%s\\\" -> 0x%%08llxL\\n\", (int64_t)%s);\n" s s
         ) fenum.emembers
     ) (all_flags ());
   Printf.fprintf out "
@@ -28,6 +28,6 @@ int main(void)
 }
 ";
   close_out out;
-  match Sys.command "g++ -fPIC `pkg-config --cflags --libs Qt5Gui Qt5Widgets` -DQT_KEYPAD_NAVIGATION -o /tmp/gen_value /tmp/gen_value.cpp" with
+  match Sys.command "g++ -std=c++14 -fPIC `pkg-config --cflags --libs Qt5Gui Qt5Widgets` -DQT_KEYPAD_NAVIGATION -o /tmp/gen_value /tmp/gen_value.cpp" with
   | 0 -> exit (Sys.command "/tmp/gen_value")
   | n -> exit n

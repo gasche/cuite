@@ -203,12 +203,18 @@ let cfield ~h ~c ~ml cl = function
     end;
     print c "  cuitecb_call(cbid, arg);";
     print c "}";
-    print c "CUITE_SIGNAL(%s, %s, (q%sOverload<%s>(&%s::%s)), %s(%s), std::bind(&invoke_signal_%s_%s, %s))"
-      (cl_c_name cl.cl) uname
-      (if private_ then "Private" else "")
-      (String.concat "," (List.map fst cparams)) (cl_c_name cl.cl) name
-      name (String.concat "," (List.map fst cparams))
-      (cl_c_name cl.cl) uname (String.concat "," ("cbid" :: List.mapi (fun i _ -> "std::placeholders::_"^string_of_int (i+1)) cparams))
+    if private_ then (* No Overloading resolution for private signals for now... *)
+      print c "CUITE_SIGNAL(%s, %s, &%s::%s, %s(%s), std::bind(&invoke_signal_%s_%s, %s))"
+        (cl_c_name cl.cl) uname
+        (cl_c_name cl.cl) name
+        name (String.concat "," (List.map fst cparams))
+        (cl_c_name cl.cl) uname (String.concat "," ("cbid" :: List.mapi (fun i _ -> "std::placeholders::_"^string_of_int (i+1)) cparams))
+    else
+      print c "CUITE_SIGNAL(%s, %s, (qOverload<%s>(&%s::%s)), %s(%s), std::bind(&invoke_signal_%s_%s, %s))"
+        (cl_c_name cl.cl) uname
+        (String.concat "," (List.map fst cparams)) (cl_c_name cl.cl) name
+        name (String.concat "," (List.map fst cparams))
+        (cl_c_name cl.cl) uname (String.concat "," ("cbid" :: List.mapi (fun i _ -> "std::placeholders::_"^string_of_int (i+1)) cparams))
     ;
     let mlargs = List.map qtype_ml_posname args in
     List.iter (fun mluname ->

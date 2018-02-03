@@ -10,7 +10,7 @@ all: ../lib/cuite.ml ../lib/cuite_stubs.gen.cpp ../lib/cuite_stubs.gen.h ../lib/
 
 flag_values.ml: tool/shared.ml $(foreach LIB,$(LIBS),$(LIB)_enum.ml) tool/gen_value.ml
 	ocamlc -g -o /tmp/gen_value -I tool $^
-	/tmp/gen_value > flag_values.ml
+	/tmp/gen_value > $@ || (rm -f $@; false)
 
 clean:
 	rm -f *.cm? tool/*.cm? flag_values.ml

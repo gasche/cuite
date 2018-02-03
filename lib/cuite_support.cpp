@@ -4,6 +4,7 @@
 #include "caml/callback.h"
 #include "caml/custom.h"
 #include "caml/printexc.h"
+#include <pthread.h>
 #include <QEvent>
 #include <QDebug>
 #include <QCoreApplication>
